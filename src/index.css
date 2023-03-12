@@ -1,0 +1,13 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+
+  --violet: #6c7ae0;
+  --light-violet: #f8f6ff;
+  --grey: #808080;
+  --scrollbar: #ccc;
+  --bg-scrollbar: #ebebeb;
+  --black: #212529;
+}

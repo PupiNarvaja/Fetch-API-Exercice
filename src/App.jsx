@@ -55,7 +55,6 @@ function App() {
       { error && <span className="error">An error occurred.</span> }
 
       { !error && <UsersContainer users={filteredUsers()}/> }
-      Filtros: Male/female, A-Z asc y desc, mayor de 18 o no.
     </main>
   );
 }

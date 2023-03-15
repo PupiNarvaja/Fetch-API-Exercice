@@ -1,13 +1,17 @@
 import React from "react";
 import Filter from "./Filter";
 
-const UsersFilter = ({ onGenderFilter, genderFilter, onBirthFilter, birthFilter, }) => {
+const UsersFilter = ({ onGenderFilter, genderFilter, onBirthFilter, birthFilter, onNameFilter, nameFilter }) => {
   const handleGenderFilter = (e) => {
     onGenderFilter(e.target.value);
   };
 
   const handleBirthFilter = (e) => {
     onBirthFilter(e.target.value);
+  };
+
+  const handleNameFilter = (e) => {
+    onNameFilter(e.target.value);
   };
 
   return (
@@ -24,6 +28,13 @@ const UsersFilter = ({ onGenderFilter, genderFilter, onBirthFilter, birthFilter,
         value={birthFilter}
         onHandler={handleBirthFilter}
         options={["under", "over"]}
+      />
+
+      <Filter
+        label="Name length"
+        value={nameFilter}
+        onHandler={handleNameFilter}
+        options={["Shorter or equal 4", "Longer than 4"]}
       />
     </section>
   );

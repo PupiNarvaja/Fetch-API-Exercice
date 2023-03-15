@@ -8,6 +8,7 @@ function App() {
   const [filteredData, setFilteredData] = useState([]);
   const [genderFilter, setGenderFilter] = useState("");
   const [birthFilter, setBirthFilter] = useState("");
+  const [nameFilter, setNameFilter] = useState("");
 
   const { data, isLoading, error } = useFetch("https://fakerapi.it/api/v1/persons");
 
@@ -23,6 +24,7 @@ function App() {
 
     const applyFilters = () => {
       const minimumAge = 18;
+      const minimumLettersInName = 4;
 
       setFilteredData(
         data.filter((user) => {
@@ -33,13 +35,18 @@ function App() {
             (birthFilter === "under"
               ? checkAge(user.birthday) < minimumAge
               : checkAge(user.birthday) >= minimumAge);
-          return isGenderFilterActive && isBirthFilterActive;
+          const isNameFilterActive =
+            !nameFilter || (nameFilter === "Shorter or equal 4"
+              ? user.firstname.length <= minimumLettersInName
+              : user.firstname.length > minimumLettersInName);
+              
+          return isGenderFilterActive && isBirthFilterActive && isNameFilterActive;
         })
       );
     };
 
     applyFilters();
-  }, [data, genderFilter, birthFilter]);
+  }, [data, genderFilter, birthFilter, nameFilter]);
 
   const onGenderFilter = (value) => {
     setGenderFilter(value);
@@ -47,6 +54,10 @@ function App() {
 
   const onBirthFilter = (value) => {
     setBirthFilter(value);
+  };
+
+  const onNameFilter = (value) => {
+    setNameFilter(value);
   };
 
   return (
@@ -58,6 +69,8 @@ function App() {
         genderFilter={genderFilter}
         onBirthFilter={onBirthFilter}
         birthFilter={birthFilter}
+        onNameFilter={onNameFilter}
+        nameFilter={nameFilter}
       />
 
       {isLoading && <span className="loading">Loading...</span>}

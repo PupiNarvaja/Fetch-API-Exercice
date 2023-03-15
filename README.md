@@ -2,8 +2,6 @@
 
 Data displayed in a table with filters.
 
-Notes: Filters do not work simultaneously.
-
 ## Authors
 
 - [@PupiNarvaja](https://github.com/PupiNarvaja) - Juan Manuel Narvaja.

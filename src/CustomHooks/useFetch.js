@@ -6,14 +6,22 @@ export const useFetch = (url) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setIsLoading(true);
+      (async () => {
+        try {
+          setIsLoading(true);
 
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => setData(data))
-      .catch((error) => setError(error))
-      .finally(() => setIsLoading(false));
-  }, []);
+          const res = await fetch(url);
+          const { data } = await res.json();
+
+          setData(data);
+        } catch (error) {
+          setError(error);
+        } finally {
+          setIsLoading(false);
+        }
+      })();
+    }, []);
+
 
   return { data, isLoading, error };
 };

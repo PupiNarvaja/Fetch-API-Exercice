@@ -1,61 +1,72 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFetch } from "./CustomHooks/useFetch";
 import UsersContainer from "./components/UsersContainer/UsersContainer";
 import UsersFilter from "./components/UsersFilter/UsersFilter";
 import "./App.css";
 
 function App() {
+  const [filteredData, setFilteredData] = useState([]);
   const [genderFilter, setGenderFilter] = useState("");
   const [birthFilter, setBirthFilter] = useState("");
 
-  const { data: users, isLoading, error } = useFetch("https://fakerapi.it/api/v1/persons");
+  const { data, isLoading, error } = useFetch("https://fakerapi.it/api/v1/persons");
 
-  const filteredUsers = () => {
-    const data = users?.data;
-
-    if (genderFilter) {
-      return data.filter((user) => user.gender === genderFilter);
+  useEffect(() => {
+    if (!data) {
+      return;
     }
 
-    if (birthFilter) {
-      const baseYear = 2000;
+    const checkAge = (userAge) => {
+      const diffTime = Date.now() - new Date(userAge).getTime();
+      return Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365.25));
+    };
 
-      return data.filter((user) => {
-        const yearOfBirth = user.birthday.split("-")[0];
+    const applyFilters = () => {
+      const minimumAge = 18;
 
-        if (birthFilter === "under") {
-          return yearOfBirth < baseYear;
-        }
+      setFilteredData(
+        data.filter((user) => {
+          const isGenderFilterActive =
+            !genderFilter || user.gender === genderFilter;
+          const isBirthFilterActive =
+            !birthFilter ||
+            (birthFilter === "under"
+              ? checkAge(user.birthday) < minimumAge
+              : checkAge(user.birthday) >= minimumAge);
+          return isGenderFilterActive && isBirthFilterActive;
+        })
+      );
+    };
 
-        if (birthFilter === "over") {
-          return yearOfBirth > baseYear;
-        }
-      });
-    }
+    applyFilters();
+  }, [data, genderFilter, birthFilter]);
 
-    return data;
+  const onGenderFilter = (value) => {
+    setGenderFilter(value);
   };
 
-  const onGenderFilter = (value) => (
-    setGenderFilter(value)
-  );
-
-  const onBirthFilter = (value) => (
-    setBirthFilter(value)
-  );
+  const onBirthFilter = (value) => {
+    setBirthFilter(value);
+  };
 
   return (
     <main id="main">
       <h1 className="main__h1">Data Dashboard</h1>
 
-      <UsersFilter onGenderFilter={onGenderFilter} onBirthFilter={onBirthFilter} />
+      <UsersFilter
+        onGenderFilter={onGenderFilter}
+        genderFilter={genderFilter}
+        onBirthFilter={onBirthFilter}
+        birthFilter={birthFilter}
+      />
 
-      { isLoading && <span className="loading">Loading...</span> }
+      {isLoading && <span className="loading">Loading...</span>}
 
-      { error && <span className="error">An error occurred.</span> }
+      {!isLoading && error && (
+        <span className="error">An error occurred.{error.message}</span>
+      )}
 
-      { !error && <UsersContainer users={filteredUsers()}/> }
-      Filtros: Male/female, A-Z asc y desc, mayor de 18 o no.
+      {!isLoading && data && <UsersContainer users={filteredData} />}
     </main>
   );
 }

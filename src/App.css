@@ -12,7 +12,7 @@
 }
 
 .main__h1 {
-  margin: 75px 0px;
+  margin: 30px 0px;
   font-size: 80px;
   text-align: center;
   color: var(--black);
@@ -21,7 +21,6 @@
 .wrapper {
   overflow: auto;
   height: 600px;
-  margin-bottom: 200px;
   box-shadow: 0px 0px 20px rgba(0,0,0, 0.1),
     0px 10px 20px rgba(0,0,0,0.05),
     0px 20px 20px rgba(0,0,0,0.05),
